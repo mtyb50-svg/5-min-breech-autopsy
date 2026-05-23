@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "lastGood": {
+    "google": "google:default",
+    "huggingface": "huggingface:default",
+    "cerebras": "cerebras:default"
+  },
+  "usageStats": {
+    "google:default": {
+      "lastUsed": 1779092767788,
+      "errorCount": 0
+    },
+    "huggingface:default": {
+      "lastUsed": 1779524734949,
+      "errorCount": 0
+    },
+    "cerebras:default": {
+      "lastUsed": 1779528240568,
+      "errorCount": 0
+    }
+  }
+}

@@ -1,0 +1,149 @@
+# in powershell
+
+Check Your Free Space
+
+- Get-PSDrive C
+
+- wsl --install
+
+- wsl --set-default-version 2
+
+in this file --- C:\Users\<YourName>\.wslconfig
+
+[wsl2]
+memory=3GB
+processors=2
+swap=2GB
+
+moving wsl from C: to D:
+
+# Create folder on D:
+- mkdir D:\WSL\Ubuntu
+
+# Export the installed Ubuntu
+- wsl --export Ubuntu D:\WSL\ubuntu-backup.tar
+
+# Remove it from C:
+- wsl --unregister Ubuntu
+
+# Re-import on D:
+- wsl --import Ubuntu D:\WSL\Ubuntu D:\WSL\ubuntu-backup.tar --version 2
+
+set default user 
+
+wsl -u root
+
+- echo -e "[user]\ndefault=tayyab_h" | sudo tee /etc/wsl.conf
+
+
+
+
+(base) PS C:\Windows\system32> wsl --status
+Default Distribution: Ubuntu
+Default Version: 2
+
+
+(base) PS C:\Windows\system32> wsl --version
+WSL version: 2.7.3.0
+Kernel version: 6.6.114.1-1
+WSLg version: 1.0.73
+MSRDC version: 1.2.6676
+Direct3D version: 1.611.1-81528511
+DXCore version: 10.0.26100.1-240331-1435.ge-release
+Windows version: 10.0.19045.6466
+
+
+
+
+(base) PS C:\Windows\system32> wsl --list --verbose
+  NAME              STATE           VERSION
+* Ubuntu            Running         2
+  docker-desktop    Stopped         2
+
+
+
+
+(base) PS C:\Windows\system32> wsl ~
+Welcome to Ubuntu 26.04 LTS (GNU/Linux 6.6.114.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://docs.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat May 16 14:51:42 PKT 2026
+
+  System load:  0.08                Processes:             13
+  Usage of /:   0.3% of 1006.85GB   Users logged in:       0
+  Memory usage: 11%                 IPv4 address for eth0: 172.21.202.254
+  Swap usage:   0%
+
+
+This message is shown once a day. To disable it please create the
+/home/tayyab_h/.hushlogin file.
+
+
+in wsl
+
+tayyab_h@DESKTOP-KUPIGKG:~$ lsb_release -a
+No LSB modules are available.
+Distributor ID: Ubuntu
+Description:    Ubuntu 26.04 LTS
+Release:        26.04
+Codename:       resolute
+tayyab_h@DESKTOP-KUPIGKG:~$
+
+
+
+
+
+installing sift work station tools 
+
+
+
+sudo apt update && sudo apt install -y sleuthkit autopsy bulk-extractor exiftool tshark wireshark binutils binwalk foremost p7zip-full ewf-tools afflib-tools python3 python3-pip python3-dev git curl wget build-essential libssl-dev yara clamav clamav-daemon
+
+# how many tools i have 
+
+tayyab_h@DESKTOP-KUPIGKG:~$ dpkg --list | grep -E "sleuthkit|autopsy|exiftool|tshark|wireshark|binwalk|foremost|yara|clamav|nmap|7zip|ewf|afflib" | awk '{print $2, $3}'
+
+
+# result 
+
+
+7zip 26.00+dfsg-1
+afflib-tools 3.7.22-1build1
+autopsy 2.24-6build1
+binwalk 2.4.3+dfsg1-2build1
+clamav 1.4.4+dfsg-0ubuntu0.26.04.1
+clamav-base 1.4.4+dfsg-0ubuntu0.26.04.1
+clamav-daemon 1.4.4+dfsg-0ubuntu0.26.04.1
+clamav-freshclam 1.4.4+dfsg-0ubuntu0.26.04.1
+ewf-tools 20140816-2build1
+foremost 1.5.7-11build1
+libafflib0t64:amd64 3.7.22-1build1
+libclamav12:amd64 1.4.4+dfsg-0ubuntu0.26.04.1
+libewf2:amd64 20140816-2build1
+libimage-exiftool-perl 13.50+dfsg-1
+libwireshark-data 4.6.4-1
+libwireshark19:amd64 4.6.4-1
+libyara10:amd64 4.5.5-1
+nmap 7.98+dfsg-1
+nmap-common 7.98+dfsg-1
+python3-binwalk 2.4.3+dfsg1-2build1
+sleuthkit 4.12.1+dfsg-3build1
+tshark 4.6.4-1
+wireshark 4.6.4-1
+wireshark-common 4.6.4-1
+yara 4.5.5-1
+
+
+
+
+to run the server 
+
+# Run this in WSL
+python3 ~/forensics-mcp/server.py --transport sse --port 8000
+
+go there 
+
+\\wsl$\Ubuntu\home\tayyab_h\
