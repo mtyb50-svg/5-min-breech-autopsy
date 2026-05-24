@@ -204,12 +204,17 @@ def _sha256(path: Path) -> str:
 
 
 def _resolve(file_path: str) -> Path:
+    """Resolve a path to ~/lab/ sandbox with symlink rejection."""
     p = Path(file_path)
     if p.is_absolute():
+        if p.is_symlink():
+            raise PermissionError(f"Symlink rejected (evidence integrity): {p}")
         if p.exists():
             return p
         raise FileNotFoundError(f"Not found: {p}")
     candidate = LAB_DIR / p
+    if candidate.is_symlink():
+        raise PermissionError(f"Symlink rejected (evidence integrity): {candidate}")
     if candidate.exists():
         return candidate
     raise FileNotFoundError(f"Not found: {file_path} (checked {LAB_DIR})")
