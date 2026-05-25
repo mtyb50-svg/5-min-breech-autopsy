@@ -147,3 +147,6 @@ python3 ~/forensics-mcp/server.py --transport sse --port 8000
 go there 
 
 \\wsl$\Ubuntu\home\tayyab_h\
+
+
+grep '"token"' ~/.openclaw/openclaw.json
