@@ -613,8 +613,31 @@ Call generate_report(
 Returns full markdown report with executive summary, timeline, MITRE coverage,
 IOC list, and prioritized recommendations.
 
+### Step 6: Persist to Database
+Call save_investigation(
+  report_output=<step 5 output>,
+  timeline_output=<step 1 output>,
+  case_name="<same case identifier as step 5>",
+  evidence_path="<primary evidence file path>",
+  mitre_output=<step 2 output>,
+  ioc_output=<step 4 output>,
+  confidence_output=<step 3 output>
+)
+This persists the entire investigation to PostgreSQL in one atomic write:
+  - investigations table  — summary row with confidence, attack flow, tactics
+  - timeline_events table — one row per timeline event (queryable by phase/severity)
+  - ioc_items table       — one row per IOC (file, network, registry, account)
+  - mitre_techniques table — one row per ATT&CK technique detected
+
+The tool returns investigation_id — include it in your final response so the
+analyst can reference the stored record later.
+
 ## Output Format
-Return the full report_markdown from generate_report, followed by the summary dict.
+Return:
+1. The full report_markdown from generate_report (executive summary first)
+2. The investigation_id returned by save_investigation
+3. A one-line confirmation: "Investigation saved to database as ID <id>"
+
 Present the executive summary section first, then ask if the full technical
 details are needed.
 EOF

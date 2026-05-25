@@ -15,12 +15,18 @@ Logs         : mcp_servers/synthesis_mcp/logs/synthesis_mcp.log
 
 import json
 import logging
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional
 
+# Allow imports from the repo root when running as a script
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
 from fastmcp import FastMCP
+from mcp_servers.shared.models import InvestigationReport
+from mcp_servers.db.connection import save_investigation_report, list_investigations as _list_investigations
 
 LOG_DIR = Path(__file__).parent / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
@@ -715,6 +721,144 @@ and {len(high_events)} high-severity findings.
             "external_ips": external_ips[:10],
             "agents_contributed": agents_involved,
         },
+        "duration_ms": round((time.time() - t0) * 1000),
+    }
+
+
+@mcp.tool()
+async def save_investigation(
+    report_output: dict[str, Any],
+    timeline_output: dict[str, Any],
+    case_name: str,
+    evidence_path: str,
+    mitre_output: Optional[dict[str, Any]] = None,
+    ioc_output: Optional[dict[str, Any]] = None,
+    confidence_output: Optional[dict[str, Any]] = None,
+) -> dict[str, Any]:
+    """
+    Persist the completed investigation to PostgreSQL.
+
+    Call this as the FINAL step after generate_report.  Pass in the raw
+    outputs from every prior synthesis tool so the DB layer can store
+    both the summary row AND the normalised per-event / per-IOC / per-technique
+    rows in a single atomic transaction.
+
+    Args:
+        report_output:     Full dict returned by generate_report
+        timeline_output:   Full dict returned by assemble_timeline
+        case_name:         Human-readable case identifier (e.g. "CASE-2024-001")
+        evidence_path:     Path to the primary evidence file that was analysed
+        mitre_output:      Dict returned by map_mitre_attack      (optional)
+        ioc_output:        Dict returned by generate_ioc_list      (optional)
+        confidence_output: Dict returned by calculate_confidence   (optional)
+
+    Returns:
+        investigation_id — the Postgres primary key of the saved record,
+        plus a quick summary so the agent can confirm what was stored.
+    """
+    t0 = time.time()
+    log.info(f"[save_investigation] case={case_name!r} evidence={evidence_path!r}")
+
+    if report_output.get("status") == "ERROR":
+        return {
+            "status": "ERROR",
+            "message": "report_output contains an error — aborting save",
+            "report_error": report_output.get("message"),
+        }
+
+    try:
+        typed_report = InvestigationReport.from_synthesis_outputs(
+            case_name=case_name,
+            evidence_path=evidence_path,
+            report_output=report_output,
+            timeline_output=timeline_output,
+            mitre_output=mitre_output,
+            ioc_output=ioc_output,
+            confidence_output=confidence_output,
+        )
+    except Exception as exc:
+        log.error(f"[save_investigation] Pydantic validation failed: {exc}")
+        return {
+            "status": "ERROR",
+            "message": f"Pydantic validation failed: {exc}",
+        }
+
+    try:
+        inv_id = save_investigation_report(typed_report)
+    except RuntimeError as exc:
+        log.error(f"[save_investigation] DB not available: {exc}")
+        return {
+            "status": "ERROR",
+            "message": str(exc),
+        }
+    except Exception as exc:
+        log.error(f"[save_investigation] DB write failed: {exc}")
+        return {
+            "status": "ERROR",
+            "message": f"Database write failed: {exc}",
+        }
+
+    s = typed_report.summary
+    log.info(f"[save_investigation] Saved investigation id={inv_id}")
+
+    return {
+        "status": "SAVED",
+        "investigation_id": inv_id,
+        "case_name": s.case_name,
+        "evidence_path": s.evidence_path,
+        "overall_confidence": s.overall_confidence,
+        "confidence_category": s.confidence_category,
+        "attack_flow": s.attack_flow,
+        "attack_sophistication": s.attack_sophistication,
+        "tactics_count": s.tactics_count,
+        "critical_findings": s.critical_findings,
+        "high_findings": s.high_findings,
+        "timeline_events_saved": len(typed_report.timeline),
+        "iocs_saved": typed_report.ioc_list.total_iocs,
+        "mitre_techniques_saved": len(typed_report.mitre_techniques),
+        "incident_start": s.incident_start,
+        "incident_end": s.incident_end,
+        "duration_ms": round((time.time() - t0) * 1000),
+        "message": (
+            f"Investigation '{case_name}' saved to database (id={inv_id}). "
+            f"{len(typed_report.timeline)} timeline events, "
+            f"{typed_report.ioc_list.total_iocs} IOCs, "
+            f"{len(typed_report.mitre_techniques)} MITRE techniques stored."
+        ),
+    }
+
+
+@mcp.tool()
+async def list_past_investigations(limit: int = 10) -> dict[str, Any]:
+    """
+    List previously saved investigations from the PostgreSQL database.
+
+    Useful for the synthesis agent to reference earlier cases or for
+    the analyst to check what has already been stored.
+
+    Args:
+        limit: Maximum number of records to return (default 10, max 50)
+    """
+    t0 = time.time()
+    limit = max(1, min(limit, 50))
+
+    try:
+        rows = _list_investigations(limit=limit)
+    except RuntimeError as exc:
+        return {"status": "ERROR", "message": str(exc)}
+    except Exception as exc:
+        log.error(f"[list_past_investigations] {exc}")
+        return {"status": "ERROR", "message": f"Database query failed: {exc}"}
+
+    for row in rows:
+        for key, val in row.items():
+            if hasattr(val, "isoformat"):
+                row[key] = val.isoformat()
+
+    return {
+        "status": "OK",
+        "investigations": rows,
+        "total_returned": len(rows),
         "duration_ms": round((time.time() - t0) * 1000),
     }
 
