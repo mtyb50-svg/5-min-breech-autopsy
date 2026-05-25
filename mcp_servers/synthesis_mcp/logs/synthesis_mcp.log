@@ -1,0 +1,5 @@
+2026-05-24 10:54:05,164 [INFO] ------------------------------------------------------------
+2026-05-24 10:54:05,164 [INFO] Synthesis MCP Server (FastMCP) starting
+2026-05-24 10:54:05,164 [INFO]   Logs : /home/tayyab_h/mcp_servers/synthesis_mcp/logs
+2026-05-24 10:54:05,165 [INFO] ------------------------------------------------------------
+2026-05-24 10:54:05,185 [INFO] Processing request of type ListToolsRequest

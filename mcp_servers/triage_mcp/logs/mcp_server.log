@@ -7,3 +7,12 @@
 2026-05-19 12:07:36,206 [INFO] ------------------------------------------------------------
 2026-05-19 12:07:36,207 [INFO] Wrote default YARA rules → /home/tayyab_h/mcp_server/yara_rules/default_rules.yar
 2026-05-19 12:07:37,309 [INFO] HTTP Request: GET https://pypi.org/pypi/fastmcp/json "HTTP/1.1 200 OK"
+2026-05-24 10:53:56,013 [INFO] ------------------------------------------------------------
+2026-05-24 10:53:56,014 [INFO] Triage MCP Server (FastMCP) starting
+2026-05-24 10:53:56,014 [INFO]   Lab dir    : /home/tayyab_h/lab
+2026-05-24 10:53:56,014 [INFO]   Mount base : /tmp/mcp_mounts
+2026-05-24 10:53:56,014 [INFO]   YARA rules : /home/tayyab_h/mcp_servers/triage_mcp/rules
+2026-05-24 10:53:56,014 [INFO]   Logs       : /home/tayyab_h/mcp_servers/triage_mcp/logs
+2026-05-24 10:53:56,015 [INFO] ------------------------------------------------------------
+2026-05-24 10:53:56,015 [INFO] Wrote default YARA rules → /home/tayyab_h/mcp_servers/triage_mcp/rules/default_rules.yar
+2026-05-24 10:53:56,057 [INFO] Processing request of type ListToolsRequest

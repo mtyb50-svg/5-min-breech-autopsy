@@ -9,8 +9,8 @@ Tools:
 
 Evidence dir : ~/lab/
 Mount base   : /tmp/mcp_mounts/
-YARA rules   : ~/mcp_server/yara_rules/*.yar
-Logs         : ~/mcp_server/logs/mcp_server.log
+YARA rules   : mcp_servers/triage_mcp/rules/*.yar
+Logs         : mcp_servers/triage_mcp/logs/triage_mcp.log
 """
 
 import asyncio
@@ -30,8 +30,9 @@ from fastmcp import FastMCP
 
 LAB_DIR        = Path.home() / "lab"
 MOUNT_BASE     = Path("/tmp/mcp_mounts")
-YARA_RULES_DIR = Path.home() / "mcp_server" / "yara_rules"
-LOG_DIR        = Path.home() / "mcp_server" / "logs"
+SERVER_DIR     = Path(__file__).parent
+YARA_RULES_DIR = SERVER_DIR / "rules"
+LOG_DIR        = SERVER_DIR / "logs"
 
 for d in (MOUNT_BASE, YARA_RULES_DIR, LOG_DIR):
     d.mkdir(parents=True, exist_ok=True)
@@ -45,7 +46,6 @@ logging.basicConfig(
     ],
 )
 log = logging.getLogger("triage_mcp")
-
 # ──────────────────────────────────────────────
 # FastMCP app
 # ──────────────────────────────────────────────

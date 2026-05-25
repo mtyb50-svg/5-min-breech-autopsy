@@ -1,0 +1,6 @@
+2026-05-24 10:54:02,439 [INFO] ------------------------------------------------------------
+2026-05-24 10:54:02,439 [INFO] Exfiltration MCP Server (FastMCP) starting
+2026-05-24 10:54:02,439 [INFO]   Lab dir : /home/tayyab_h/lab
+2026-05-24 10:54:02,439 [INFO]   Logs    : /home/tayyab_h/mcp_servers/exfiltration_mcp/logs
+2026-05-24 10:54:02,439 [INFO] ------------------------------------------------------------
+2026-05-24 10:54:02,459 [INFO] Processing request of type ListToolsRequest

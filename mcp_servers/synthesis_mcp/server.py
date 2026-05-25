@@ -10,7 +10,7 @@ Tools:
   5. generate_report       — produce executive + technical incident report
 
 Evidence dir : ~/lab/
-Logs         : ~/mcp_server/logs/synthesis_mcp.log
+Logs         : mcp_servers/synthesis_mcp/logs/synthesis_mcp.log
 """
 
 import json
@@ -22,7 +22,7 @@ from typing import Any, Optional
 
 from fastmcp import FastMCP
 
-LOG_DIR = Path.home() / "mcp_server" / "logs"
+LOG_DIR = Path(__file__).parent / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(

@@ -1,0 +1,6 @@
+2026-05-24 10:54:00,197 [INFO] ------------------------------------------------------------
+2026-05-24 10:54:00,197 [INFO] Lateral Movement MCP Server (FastMCP) starting
+2026-05-24 10:54:00,197 [INFO]   Lab dir : /home/tayyab_h/lab
+2026-05-24 10:54:00,197 [INFO]   Logs    : /home/tayyab_h/mcp_servers/lateral_movement_mcp/logs
+2026-05-24 10:54:00,197 [INFO] ------------------------------------------------------------
+2026-05-24 10:54:00,223 [INFO] Processing request of type ListToolsRequest

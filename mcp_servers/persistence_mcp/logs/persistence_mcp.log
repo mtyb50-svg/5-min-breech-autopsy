@@ -1,0 +1,6 @@
+2026-05-24 10:53:57,766 [INFO] ------------------------------------------------------------
+2026-05-24 10:53:57,766 [INFO] Persistence MCP Server (FastMCP) starting
+2026-05-24 10:53:57,766 [INFO]   Lab dir : /home/tayyab_h/lab
+2026-05-24 10:53:57,766 [INFO]   Logs    : /home/tayyab_h/mcp_servers/persistence_mcp/logs
+2026-05-24 10:53:57,766 [INFO] ------------------------------------------------------------
+2026-05-24 10:53:57,788 [INFO] Processing request of type ListToolsRequest

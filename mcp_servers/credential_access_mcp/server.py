@@ -24,7 +24,7 @@ from typing import Any, Optional
 from fastmcp import FastMCP
 
 LAB_DIR = Path.home() / "lab"
-LOG_DIR = Path.home() / "mcp_server" / "logs"
+LOG_DIR = Path(__file__).parent / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 logging.basicConfig(
@@ -36,6 +36,7 @@ logging.basicConfig(
     ],
 )
 log = logging.getLogger("credential_access_mcp")
+
 
 mcp = FastMCP(
     name="credential-access-mcp-server",

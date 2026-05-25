@@ -1,1 +1,4 @@
-.openclaw\agents\main\agent\auth-profiles.json
+.openclaw/agents/main/agent/auth-profiles.json
+__pycache__
+# openclaw_setup.md
+# sub-agent_setup.txt
